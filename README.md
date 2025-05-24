@@ -1,2 +1,2 @@
-# full-stack-open
- My solutions for the exercises of the University of Helsinki's Full Stack open course. fullstackopen.com/en/ 
+# Full Stack Open
+ My solutions for the exercises of the [University of Helsinki](https://www.helsinki.fi/en)'s [Full Stack open course](https://fullstackopen.com/).
