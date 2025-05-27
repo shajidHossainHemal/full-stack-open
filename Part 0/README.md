@@ -1,4 +1,4 @@
-# Full Stack Open excercies for Part-0
+# Solution to the exercises of Part 0
  This folder contains my answers of exercises from part 0b, `Fundamentals of Web Apps`.
  
 Excercises:
