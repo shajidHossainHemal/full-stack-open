@@ -10,8 +10,8 @@ Excercises:
 - 1.3 - 1.5: courseinfo
 
 ### `Component state, event handlers`
-
 ### `A more complex state, debugging React app`.
-
+- 1.6 - 1.11: unicafe
+- 1.12 - 1.14: anecdotes
 
 Source: https://fullstackopen.com/en/part1
