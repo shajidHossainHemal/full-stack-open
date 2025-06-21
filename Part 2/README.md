@@ -7,6 +7,8 @@ Excercises:
 - 2.1 - 2.5: courseinfo
 
 #### `Forms`
+- 2.6 - 2.10: phonebook
+
 #### `Getting data from server`
 #### `Altering data in server`
 #### `Adding styles to React app`
