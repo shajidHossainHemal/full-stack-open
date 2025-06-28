@@ -1,53 +1,65 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchKeyword, setSearchKeyword] = useState('')
-  const [filterPersons, setFilteredPersons] = useState(persons)
 
   const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-        setFilteredPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }
-
   useEffect(hook, [])
-  console.log('render', persons.length, 'notes')
 
   const addNewName = (event) => {
     event.preventDefault()
 
-    const doesNameExist = persons.some(person => person.name === newName)
-    if(doesNameExist)
-    {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-
     const personObject = {
       name: newName,
-      number: newNumber,
-      id: String(persons.length + 1),
+      number: newNumber
     }
 
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    const result = persons.find(person =>
+      person.name === personObject.name.trim()
+    )
 
-    if (searchKeyword === '') {
-      console.log('Add new person')
-      setFilteredPersons(persons.concat(personObject))
+    if (result)
+    {
+      if(window.confirm(
+        `${personObject.name} is already added to phonebook, replace the old number with a new one?`
+      )) {
+        personService
+          .update(result.id, personObject)
+          .then(updatedPerson => {
+            setPersons(prevPersons => 
+              prevPersons.map(person => 
+                person.id !== updatedPerson.id ? person : updatedPerson
+              )
+            )
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+      else {
+        return
+      }
+    }
+    else {
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
   }
 
@@ -62,18 +74,22 @@ const App = () => {
   const handleSearchChange = (event) => {
     setSearchKeyword(event.target.value)
     console.log(event.target.value)
+  }
 
-    if (event.target.value === '')
+  const handleDeleteOperation = (person) => {
+    console.log(`Delete ${person.name} from phonebook records.`)
+    if(window.confirm(`Delete ${person.name}`))
     {
-      console.log('search keyword is empty')
-      setFilteredPersons(persons)
+      console.log(`Delete confirmed.`)
+      personService
+        .remove(person.id)
+        .then(removedPerson => {
+          setPersons(persons.filter(person => person.id !== removedPerson.id))
+        })
     }
     else
     {
-      console.log('searching....')
-      setFilteredPersons(persons.filter(person =>
-        person.name.toLowerCase().includes(event.target.value.toLowerCase())
-      ))
+      console.log(`Delete operation aborted.`)
     }
   }
 
@@ -88,7 +104,9 @@ const App = () => {
                   onNameChange={handleNameChange} 
                   onNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Persons filterPersons={filterPersons}/>
+      <Persons searchKeyword={searchKeyword}
+               allPersons={persons}
+               handleRemove={handleDeleteOperation} />
     </div>
   )
 }

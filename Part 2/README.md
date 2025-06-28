@@ -10,7 +10,11 @@ Excercises:
 - 2.6 - 2.10: phonebook
 
 #### `Getting data from server`
+- 2.11: phonebook
+
 #### `Altering data in server`
+- 2.12 - 2.15: phonebook
+
 #### `Adding styles to React app`
 
 Source: https://fullstackopen.com/en/part2
