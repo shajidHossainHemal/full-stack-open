@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchKeyword, setSearchKeyword] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const hook = () => {
     personService
@@ -47,6 +49,15 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
+          .catch(error => {
+            setNotification({
+              type: 'error',
+              text: `Information of ${personObject.name} has already been removed from server`
+            })
+            setTimeout(() => {
+              setNotification(null)
+            }, 3000)
+          })
       }
       else {
         return
@@ -59,6 +70,22 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setNotification({
+            type: 'success',
+            text: `Added ${returnedPerson.name}`
+          })
+          setTimeout(() => {
+            setNotification(null)
+          }, 3000)
+        })
+        .catch(error => {
+          setNotification({
+            type: 'error',
+            text: `Information of ${personObject.name} has already been removed from server`
+          })
+          setTimeout(() => {
+            setNotification(null)
+          }, 3000)
         })
     }
   }
@@ -96,6 +123,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification}/>
       <Filter onValueChange={handleSearchChange} />
       <h2>add a new</h2>
       <PersonForm name={newName}
