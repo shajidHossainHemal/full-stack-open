@@ -17,5 +17,6 @@ Excercises:
 
 #### `Adding styles to React app`
 - 2.16 - 2.17: phonebook
+- 2.18 - 2.20: countrydata
 
 Source: https://fullstackopen.com/en/part2
